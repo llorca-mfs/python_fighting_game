@@ -22,7 +22,7 @@ def main():
     while gameRunning:
         screen.blit(bg, (0,0))
 
-        print("player_1.isWalking: ", player_1.isWalking)
+        #print(player_1.rect.bottom)
 
         #PLAYER CONTROLS:
         for event in pygame.event.get():
@@ -33,14 +33,22 @@ def main():
                     player_1.right_pressed = True
                 if event.key == K_a:
                     player_1.left_pressed = True
+                if event.key == K_w:
+                    player_1.up_pressed = True
+                if event.key == K_s:
+                    player_1.down_pressed = True
             if event.type == KEYUP:
                 if event.key == K_d:
                     player_1.right_pressed = False
                 if event.key == K_a:
                     player_1.left_pressed = False
+                if event.key == K_w:
+                    player_1.up_pressed = False
+                if event.key == K_s:
+                    player_1.down_pressed = False
             
         player_1.draw(screen)
-        player_1.update()
+        player_1.update(WINDOW_SIZE)
 
         #player_2.draw(screen)
 
