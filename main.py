@@ -22,7 +22,7 @@ def main():
     while gameRunning:
         screen.blit(bg, (0,0))
 
-        #print(player_1.rect.bottom)
+        print(player_1.isDucking)
 
         #PLAYER CONTROLS:
         for event in pygame.event.get():
