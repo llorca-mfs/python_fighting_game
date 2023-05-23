@@ -79,12 +79,17 @@ def main():
         player_2.update(WINDOW_SIZE)
 
         #print(player_1.attack_pressed)
-
         #print(player_1.rect.top, player_1.isDucking)
 
         player_1.draw(screen)
         player_2.draw(screen)
         
+        if player_1.attack_rect.colliderect(player_2.rect) and player_1.isAttacking:
+            print("player1 attack player2")
+            
+
+        if player_2.attack_rect.colliderect(player_1.rect) and player_2.isAttacking:
+            print("player2 attack player1")
 
         pygame.display.update()
         clock.tick(60)

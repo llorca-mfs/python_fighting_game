@@ -31,8 +31,8 @@ class Player():
 
     def draw(self, surface):
         pygame.draw.rect(surface, (0,0,255) if self.isPlayer2 else (255,0,0), self.rect)
-        #if self.isAttacking:
-        pygame.draw.rect(surface,(0,255,0), self.attack_rect)
+        if self.isAttacking:
+            pygame.draw.rect(surface,(0,255,0), self.attack_rect)
 
     def update(self, window_size):
         self.xVel = 0
