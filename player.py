@@ -28,6 +28,7 @@ class Player():
         self.isJumping = False
         self.isDucking = False
         self.isAttacking = False
+        self.isFlipped = isPlayer2
 
     def draw(self, surface):
         pygame.draw.rect(surface, (0,0,255) if self.isPlayer2 else (255,0,0), self.rect)
@@ -38,41 +39,46 @@ class Player():
         self.xVel = 0
         self.yVel = 0
 
-        if self.left_pressed or self.right_pressed:
-            self.isWalking = True
-        else:
-            self.isWalking = False
+        if not self.isAttacking:
+            if self.left_pressed or self.right_pressed:
+                self.isWalking = True
+            else:
+                self.isWalking = False
 
-        if self.isDucking == False:
-            if self.left_pressed and not self.right_pressed:
-                self.xVel = -self.speed
-            if self.right_pressed and not self.left_pressed:
-                self.xVel = self.speed
+            if self.isDucking == False:
+                if self.left_pressed and not self.right_pressed:
+                    self.xVel = -self.speed
+                if self.right_pressed and not self.left_pressed:
+                    self.xVel = self.speed
+                '''
+            if self.up_pressed and not self.down_pressed:
+                self.yVel = -self.speed
+            if self.down_pressed and not self.up_pressed:
+                self.yVel = self.speed
+                '''
+
+            #JUMPING
+            if self.up_pressed and not self.down_pressed and not self.isJumping:
+                self.jumpVel = -(self.speed * 4)
+                self.isJumping = True
+            
             '''
-        if self.up_pressed and not self.down_pressed:
-            self.yVel = -self.speed
-        if self.down_pressed and not self.up_pressed:
-            self.yVel = self.speed
+            #DUCKING
+            if self.down_pressed and not self.isJumping:
+                #self.yPos = self.rect.top #y coordinate of hitbox when ducking
+                self.isDucking = True
+            elif self.down_pressed == False:
+                #self.size[1] = 96
+                self.isDucking = False
             '''
 
-        #JUMPING
-        if self.up_pressed and not self.down_pressed and not self.isJumping:
-            self.jumpVel = -(self.speed * 4)
-            self.isJumping = True
-        
-        #DUCKING
-        if self.down_pressed and not self.isJumping:
-            #self.yPos = self.rect.top #y coordinate of hitbox when ducking
-            self.isDucking = True
-        elif self.down_pressed == False:
-            #self.size[1] = 96
-            self.isDucking = False
-
-        #ATTACKING
-        if self.attack_pressed:
-            self.isAttacking = True
-        else:
-            self.isAttacking = False
+            #ATTACKING
+            '''
+            if self.attack_pressed:
+                self.isAttacking = True
+            else:
+                self.isAttacking = False
+                '''
 
         #self.yPos = self.rect.top + self.size[1]
 
@@ -96,7 +102,7 @@ class Player():
 
         #print(self.yPos + (self.size[1] - self.height_duck))
 
-        self.attack_rect = pygame.Rect(self.rect.right - (2 * self.rect.width) if self.isPlayer2 else self.rect.left,self.yPos,96,32)
+        self.attack_rect = pygame.Rect(self.rect.right - (2 * self.rect.width) if self.isFlipped else self.rect.left,self.yPos,96,32)
         #self.rect = pygame.Rect(self.xPos, self.yPos,self.size[0], self.height_duck if self.isDucking else self.size[1])
         self.rect = pygame.Rect(self.xPos, self.yPos,self.size[0], self.size[1])
             
