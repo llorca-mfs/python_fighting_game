@@ -17,15 +17,14 @@ player_2 = Player(230,128, True)
 bg = pygame.image.load("bg_256.png").convert_alpha()
 
 def flip_players(playerL, playerR):
-    if playerR.rect.centerx > playerL.rect.centerx:
-        playerL.isFlipped = False
-    else:
-        playerL.isFlipped = True
+    playerL.isFlipped = False if playerR.rect.centerx > playerL.rect.centerx else True
 
 def check_collisions(attacker, victim):
     if attacker.attack_rect.colliderect(victim.rect) and attacker.isAttacking:
-            attacker.isAttacking = False # might need to change this
-            print(("player2" if attacker.isPlayer2 else "player1") + " hits other player")
+        print(("player2" if attacker.isPlayer2 else "player1") + " hits other player")
+    else:
+        print("no collision")
+    attacker.isAttacking = False # might need to change this
 
 def main():
     gameRunning = True
@@ -48,8 +47,8 @@ def main():
                 if event.key == K_SPACE:
                     #player_1.attack_pressed = True
                     player_1.isAttacking = True
-                #if event.key == K_s:
-                    #player_1.down_pressed = True
+                if event.key == K_s:
+                    player_1.down_pressed = True
 
                 if event.key == K_RIGHT:
                     player_2.right_pressed = True
@@ -59,8 +58,8 @@ def main():
                     player_2.up_pressed = True
                 if event.key == K_RSHIFT:
                     player_2.isAttacking = True
-                #if event.key == K_DOWN:
-                    #player_2.down_pressed = True
+                if event.key == K_DOWN:
+                    player_2.down_pressed = True
 
                 
             if event.type == KEYUP:
@@ -74,8 +73,8 @@ def main():
                 if event.key == K_SPACE:
                     #player_1.attack_pressed = False
                     player_1.isAttacking = False
-                #if event.key == K_s:
-                    #player_1.down_pressed = False
+                if event.key == K_s:
+                    player_1.down_pressed = False
                 
                 if event.key == K_RIGHT:
                     player_2.right_pressed = False
@@ -85,8 +84,8 @@ def main():
                     player_2.up_pressed = False
                 if event.key == K_RSHIFT:
                     player_2.isAttacking = False
-                #if event.key == K_DOWN:
-                    #player_2.down_pressed = False
+                if event.key == K_DOWN:
+                    player_2.down_pressed = False
         
         player_1.update(WINDOW_SIZE)
         player_2.update(WINDOW_SIZE)
@@ -94,14 +93,17 @@ def main():
         #print(player_1.attack_pressed)
         #print(player_1.rect.top, player_1.isDucking)
 
-        flip_players(player_1, player_2)
-        flip_players(player_2, player_1)
 
         player_1.draw(screen)
         player_2.draw(screen)
-            
-        check_collisions(player_1, player_2)
-        check_collisions(player_2, player_1)
+
+        flip_players(player_1, player_2)
+        flip_players(player_2, player_1)
+        
+        if player_1.isAttacking:
+            check_collisions(player_1, player_2)
+        if player_2.isAttacking:
+            check_collisions(player_2, player_1)
 
         #if player_2.attack_rect.colliderect(player_1.rect) and player_2.isAttacking:
         #    print("player2 attack player1")

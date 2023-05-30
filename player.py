@@ -2,7 +2,7 @@ import pygame
 
 class Player():
     def __init__(self, x, y, isPlayer2):
-        self.size = [48, 96]
+        self.size = [48, 84]
         self.rect = pygame.Rect(x,y, self.size[0], self.size[1])
 
         self.xPos = x
@@ -19,16 +19,16 @@ class Player():
         self.speed = 4
         self.gravity = 1
         self.jumpVel = 0
-        self.height_duck = 72
+        self.height_duck = 60
         self.isPlayer2 = isPlayer2
 
-        self.attack_rect = pygame.Rect(x,y,96,32)
+        self.attack_rect = pygame.Rect(x,y,96,18)
 
         self.isWalking = False
         self.isJumping = False
         self.isDucking = False
         self.isAttacking = False
-        self.isFlipped = isPlayer2
+        self.isFlipped = self.isPlayer2
 
     def draw(self, surface):
         pygame.draw.rect(surface, (0,0,255) if self.isPlayer2 else (255,0,0), self.rect)
@@ -62,7 +62,7 @@ class Player():
                 self.jumpVel = -(self.speed * 4)
                 self.isJumping = True
             
-            '''
+            
             #DUCKING
             if self.down_pressed and not self.isJumping:
                 #self.yPos = self.rect.top #y coordinate of hitbox when ducking
@@ -70,7 +70,7 @@ class Player():
             elif self.down_pressed == False:
                 #self.size[1] = 96
                 self.isDucking = False
-            '''
+            
 
             #ATTACKING
             '''
@@ -90,7 +90,7 @@ class Player():
             self.xVel = -self.rect.left        
         if self.rect.right + self.xVel > window_size[0]:
             self.xVel = window_size[0] - self.rect.right
-        
+
         #TODO: make actual collison for floor
         if self.rect.bottom + self.yVel > window_size[1] - 32:
             self.jumpVel = 0
@@ -102,9 +102,9 @@ class Player():
 
         #print(self.yPos + (self.size[1] - self.height_duck))
 
-        self.attack_rect = pygame.Rect(self.rect.right - (2 * self.rect.width) if self.isFlipped else self.rect.left,self.yPos,96,32)
-        #self.rect = pygame.Rect(self.xPos, self.yPos,self.size[0], self.height_duck if self.isDucking else self.size[1])
-        self.rect = pygame.Rect(self.xPos, self.yPos,self.size[0], self.size[1])
+        self.attack_rect = pygame.Rect(self.rect.right - (2 * self.rect.width) if self.isFlipped else self.rect.left,self.yPos,96,18)
+        self.rect = pygame.Rect(self.xPos, self.yPos,self.size[0], self.height_duck if self.isDucking else self.size[1])
+        #self.rect = pygame.Rect(self.xPos, self.yPos,self.size[0], self.size[1])
             
 
         
