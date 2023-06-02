@@ -10,33 +10,91 @@ screen = pygame.display.set_mode(WINDOW_SIZE)
 
 #TODO: check if surface x and y is optimal for changing values, consider using sprites
 
+class PlayerSurf:
+    def __init__(self, x, y):
+        self.spritesurf = pygame.Surface((192,192))
+        self.size = [48,84]
+
+
+        #relative to centerx of sprite rect
+        #attack_coords = [24, 108]
+        self.attack_coords = [120, 108]
+
+        self.xPos = x
+        self.yPos = y
+        self.xVel = 0
+        self.yVel = 0
+
+        self.left_pressed = False
+        self.right_pressed = False
+        self.up_pressed = False
+        self.down_pressed = False
+
+        self.speed = 4
+
+        self.hitbox_rect = pygame.Rect(self.spritesurf.get_rect().centerx - (self.size[0]/2), 192 - self.size[1], self.size[0], self.size[1])
+        self.attack_rect = pygame.Rect(self.attack_coords[0],self.attack_coords[1],48,18)
+
+        #with midpoint (centerx)
+        #attack_rect = pygame.Rect(player_sprite_surf.get_rect().centerx + attack_coords[0],player_sprite_surf.get_rect().top + attack_coords[1],48,18)
+
+    def draw(self):
+        self.spritesurf.fill((0,0,255))
+
+        pygame.draw.rect(self.spritesurf,(255,0,0), self.hitbox_rect)
+        pygame.draw.rect(self.spritesurf,(0,255,0), self.attack_rect)
+
+    def update(self, window):
+        self.xVel = 0
+        self.yVel = 0
+
+        if self.left_pressed and not self.right_pressed:
+            self.xVel = -self.speed
+        if self.right_pressed and not self.left_pressed:
+            self.xVel = self.speed
+        if self.up_pressed and not self.down_pressed:
+            self.yVel = -self.speed
+        if self.down_pressed and not self.up_pressed:
+            self.yVel = self.speed
+
+        self.xPos += self.xVel
+        self.yPos += self.yVel
+
+        window.blit(self.spritesurf, (self.xPos, self.yPos))
+
 def main():
     gameRunning = True
 
-    player_dimensions = [48,84]
-    attack_coords = [24, 108] #relative to centerx of sprite rect
-
-    player_sprite_surf = pygame.Surface((192,192))
+    player = PlayerSurf(0,0)
 
     while gameRunning:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: #player exits window
+                gameRunning = False
+            if event.type == KEYDOWN:
+                if event.key == pygame.K_a:
+                    player.left_pressed = True
+                if event.key == pygame.K_d:
+                    player.right_pressed = True
+                if event.key == pygame.K_w:
+                    player.up_pressed = True
+                if event.key == pygame.K_s:
+                    player.down_pressed = True
+            if event.type == KEYUP:
+                if event.key == pygame.K_a:
+                    player.left_pressed = False
+                if event.key == pygame.K_d:
+                    player.right_pressed = False
+                if event.key == pygame.K_w:
+                    player.up_pressed = False
+                if event.key == pygame.K_s:
+                    player.down_pressed = False
 
         screen.fill((0,0,0))
-        player_sprite_surf.fill((0,0,255))
 
-        player_hitbox_rect = pygame.Rect(player_sprite_surf.get_rect().centerx - (player_dimensions[0]/2), 192 - player_dimensions[1], player_dimensions[0], player_dimensions[1])
+        player.draw()
+        player.update(screen)
 
-        # attack right
-        attack_rect = pygame.Rect(player_sprite_surf.get_rect().centerx + attack_coords[0],player_sprite_surf.get_rect().top + attack_coords[1],48,18)
-
-        pygame.draw.rect(player_sprite_surf,(255,0,0), player_hitbox_rect)
-        pygame.draw.rect(player_sprite_surf,(0,255,0), attack_rect)
-
-        player_sprite_surf = pygame.transform.flip(player_sprite_surf, True, False)
-        screen.blit(player_sprite_surf, (0,0))
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT: # user closes the window
-                gameRunning = False
         pygame.display.update()
         clock.tick(60)
 

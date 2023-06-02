@@ -25,7 +25,7 @@ ryu_new_cols =  [(64,64,136), (48,48,96), (32,32,80), (16,16,64), (0,0,48), (168
 
 for i in range(0, 7):
     ryu = palette_swap(ryu, ryu_orig_cols[i], ryu_new_cols[i])
-    
+
 
 def get_image(sheet, frame, width, height):
     img = pygame.Surface((width, height)).convert()
