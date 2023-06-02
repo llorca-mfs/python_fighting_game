@@ -93,15 +93,15 @@ def main():
         #print(player_1.attack_pressed)
         #print(player_1.rect.top, player_1.isDucking)
 
-
+        #PLAYER 1 ACTIONS
         player_1.draw(screen)
-        player_2.draw(screen)
-
         flip_players(player_1, player_2)
-        flip_players(player_2, player_1)
-        
         if player_1.isAttacking:
             check_collisions(player_1, player_2)
+
+        #PLAYER 2 ACTIONS
+        player_2.draw(screen)
+        flip_players(player_2, player_1)
         if player_2.isAttacking:
             check_collisions(player_2, player_1)
 

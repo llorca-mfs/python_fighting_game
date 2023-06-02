@@ -8,13 +8,14 @@ pygame.display.set_caption("new collision system test")
 WINDOW_SIZE = [512, 480]
 screen = pygame.display.set_mode(WINDOW_SIZE)
 
+ryu_attack = pygame.image.load("./ryu_hitbox_test.png").convert_alpha()
+
 #TODO: check if surface x and y is optimal for changing values, consider using sprites
 
 class PlayerSurf:
     def __init__(self, x, y):
         self.spritesurf = pygame.Surface((192,192))
         self.size = [48,84]
-
 
         #relative to centerx of sprite rect
         #attack_coords = [24, 108]
@@ -38,11 +39,14 @@ class PlayerSurf:
         #with midpoint (centerx)
         #attack_rect = pygame.Rect(player_sprite_surf.get_rect().centerx + attack_coords[0],player_sprite_surf.get_rect().top + attack_coords[1],48,18)
 
+        self.isFlipped = False
+
     def draw(self):
         self.spritesurf.fill((0,0,255))
 
         pygame.draw.rect(self.spritesurf,(255,0,0), self.hitbox_rect)
         pygame.draw.rect(self.spritesurf,(0,255,0), self.attack_rect)
+        self.spritesurf.blit(ryu_attack, (0,0))
 
     def update(self, window):
         self.xVel = 0
@@ -60,7 +64,9 @@ class PlayerSurf:
         self.xPos += self.xVel
         self.yPos += self.yVel
 
-        window.blit(self.spritesurf, (self.xPos, self.yPos))
+        window.blit(pygame.transform.flip(self.spritesurf, self.isFlipped, False), (self.xPos, self.yPos))
+
+        #pygame.transform.flip(image, False, True), (x,y)
 
 def main():
     gameRunning = True
@@ -80,6 +86,8 @@ def main():
                     player.up_pressed = True
                 if event.key == pygame.K_s:
                     player.down_pressed = True
+                if event.key == pygame.K_SPACE:
+                    player.isFlipped = True if not player.isFlipped else False
             if event.type == KEYUP:
                 if event.key == pygame.K_a:
                     player.left_pressed = False
