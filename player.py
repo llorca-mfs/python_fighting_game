@@ -22,7 +22,8 @@ class Player():
         self.height_duck = 60
         self.isPlayer2 = isPlayer2
 
-        self.attack_rect = pygame.Rect(x,y,96,18)
+        self.attack_rect = pygame.Rect(x,y,48,18)
+        
 
         self.isWalking = False
         self.isJumping = False
@@ -63,6 +64,7 @@ class Player():
                 self.isJumping = True
             
             
+            '''
             #DUCKING
             if self.down_pressed and not self.isJumping:
                 #self.yPos = self.rect.top #y coordinate of hitbox when ducking
@@ -70,7 +72,7 @@ class Player():
             elif self.down_pressed == False:
                 #self.size[1] = 96
                 self.isDucking = False
-            
+            '''
 
             #ATTACKING
             '''
@@ -100,11 +102,12 @@ class Player():
         self.xPos += self.xVel
         self.yPos += self.yVel
 
-        #print(self.yPos + (self.size[1] - self.height_duck))
 
-        self.attack_rect = pygame.Rect(self.rect.right - (2 * self.rect.width) if self.isFlipped else self.rect.left,self.yPos,96,18)
-        self.rect = pygame.Rect(self.xPos, self.yPos,self.size[0], self.height_duck if self.isDucking else self.size[1])
-        #self.rect = pygame.Rect(self.xPos, self.yPos,self.size[0], self.size[1])
+        self.attack_rect = pygame.Rect(self.rect.centerx - (self.size[0] * 1.5) if self.isFlipped else self.rect.centerx + (self.size[0] / 2),self.rect.top + 0,48,18)
+        #self.attack_rect = pygame.Rect(,self.rect.top + 0,48,18)
+
+        #self.rect = pygame.Rect(self.xPos, self.yPos,self.size[0], self.height_duck if self.isDucking else self.size[1])
+        self.rect = pygame.Rect(self.xPos, self.yPos,self.size[0], self.size[1])
             
 
         

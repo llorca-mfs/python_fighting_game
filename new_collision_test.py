@@ -12,6 +12,26 @@ ryu_attack = pygame.image.load("./ryu_hitbox_test.png").convert_alpha()
 
 #TODO: check if surface x and y is optimal for changing values, consider using sprites
 
+class CollisionTest:
+    def __init__(self, x, y):
+        
+        self.size = [48,48]
+
+        self.rect = pygame.Rect(x,y, self.size[0], self.size[1])
+        
+        self.xPos = x
+        self.yPos = y
+        self.xVel = 0
+        self.yVel = 0
+
+        self.speed = 4
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, (255,0,0), self.rect)
+    def update(self):
+        self.rect = pygame.Rect(self.xPos, self.yPos,self.size[0], self.size[1])
+
+
 class PlayerSurf:
     def __init__(self, x, y):
         self.spritesurf = pygame.Surface((192,192))
@@ -46,7 +66,7 @@ class PlayerSurf:
 
         pygame.draw.rect(self.spritesurf,(255,0,0), self.hitbox_rect)
         pygame.draw.rect(self.spritesurf,(0,255,0), self.attack_rect)
-        self.spritesurf.blit(ryu_attack, (0,0))
+        #self.spritesurf.blit(ryu_attack, (0,0))
 
     def update(self, window):
         self.xVel = 0
@@ -72,6 +92,7 @@ def main():
     gameRunning = True
 
     player = PlayerSurf(0,0)
+    collision = CollisionTest(192,144)
 
     while gameRunning:
         for event in pygame.event.get():
@@ -102,6 +123,14 @@ def main():
 
         player.draw()
         player.update(screen)
+
+        #collision.draw(screen)
+        #collision.update()
+
+        print(player.xPos)
+
+        if player.spritesurf.get_rect().colliderect(collision.rect):
+            print("collision")
 
         pygame.display.update()
         clock.tick(60)
