@@ -24,7 +24,6 @@ class Player():
 
         self.attack_rect = pygame.Rect(x,y,48,18)
         
-
         self.isWalking = False
         self.isJumping = False
         self.isDucking = False
