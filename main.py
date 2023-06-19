@@ -16,6 +16,41 @@ player_2 = Player(230,128, True)
 
 bg = pygame.image.load("bg_256.png").convert_alpha()
 
+class LifebarSurf:
+    def __init__(self, x, y):
+        self.spritesurf = pygame.Surface((340,45)).convert_alpha()
+
+        self.xPos = x
+        self.yPos = y
+
+        #self.hitbox_rect = pygame.Rect(self.spritesurf.get_rect().centerx - (self.size[0]/2), 192 - self.size[1], self.size[0], self.size[1])
+
+        self.timer_rect = pygame.Rect(147, 0, 45, 45)
+
+        self.life_rect_bg = pygame.Rect(19, 10, 300, 27)
+
+        self.playerL_life_rect_fg = pygame.Rect(19, 10, 128, 27)
+        self.playerR_life_rect_fg = pygame.Rect(192, 10, 128, 27)
+
+    def draw(self, window):
+        self.spritesurf.fill([0,0,0,0])
+
+        pygame.draw.rect(self.spritesurf,(255,255,255), self.life_rect_bg)
+        pygame.draw.rect(self.spritesurf,(195,195,195), self.timer_rect)
+
+        pygame.draw.rect(self.spritesurf,(255,0,0), self.playerL_life_rect_fg)
+        pygame.draw.rect(self.spritesurf,(0,0,255), self.playerR_life_rect_fg)
+        
+        window.blit(self.spritesurf, (self.xPos, self.yPos))
+        #self.spritesurf.blit(ryu_attack, (0,0))
+
+    def update(self, playerL_health, playerR_health):
+        ratioL = playerL_health / 100
+        ratioR = playerR_health / 100
+
+        self.playerL_life_rect_fg = pygame.Rect(128 - (128 * ratioL) + 19, 10, 128 * ratioL, 27)
+        self.playerR_life_rect_fg = pygame.Rect(192, 10, 128 * ratioR, 27)
+
 def flip_players(playerL, playerR):
     playerL.isFlipped = False if playerR.rect.centerx > playerL.rect.centerx else True
 
@@ -32,12 +67,16 @@ def push_player(playerL, playerR):
 
 def check_collisions(attacker, victim):
     if attacker.attack_rect.colliderect(victim.rect) and attacker.isAttacking:
-        print(("player2" if attacker.isPlayer2 else "player1") + " hits other player")
+        print(("player_2" if attacker.isPlayer2 else "player_1") + " attack succeeded")
+        victim.health -= 10
     else:
-        print("no collision")
+        print(("player_2" if attacker.isPlayer2 else "player_1") + " attack failed")
     attacker.isAttacking = False # might need to change this
 
 def main():
+
+    lifebar = LifebarSurf(0,10)
+
     gameRunning = True
 
     while gameRunning:
@@ -98,6 +137,10 @@ def main():
         player_1.update(WINDOW_SIZE)
         player_2.update(WINDOW_SIZE)
 
+        lifebar.update(player_1.health, player_2.health)
+        lifebar.draw(screen)
+        
+
         #print(player_1.attack_pressed)
         #print(player_1.rect.top, player_1.isDucking)
 
@@ -106,6 +149,7 @@ def main():
         flip_players(player_1, player_2)
         if player_1.isAttacking:
             check_collisions(player_1, player_2)
+            print("player_1.health: {0}, player_2.health: {1}".format(player_1.health, player_2.health))
 
         push_player(player_1, player_2)
 
@@ -114,6 +158,7 @@ def main():
         flip_players(player_2, player_1)
         if player_2.isAttacking:
             check_collisions(player_2, player_1)
+            print("player_1.health: {0}, player_2.health: {1}".format(player_1.health, player_2.health))
         
         push_player(player_2, player_1)
 
